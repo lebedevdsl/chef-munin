@@ -1,0 +1,29 @@
+log_level 4
+log_file <%= node['munin']['logdir'] %>/munin-node.log
+pid_file <%= node['munin']['rundir'] %>/munin-node.pid
+
+background 1
+setsid 1
+
+user root
+group root
+
+# Regexps for files to ignore
+<% node['munin']['node']['ignore_list'].each do |entry| %>
+ignore_file "dummy"<%#= entry %>
+<% end %>
+
+# If you have installed the Net::CIDR perl module, you can use one or more
+# cidr_allow and cidr_deny address/mask patterns.  A connecting client must
+# match any cidr_allow, and not match any cidr_deny.  Note that a netmask
+# *must* be provided, even if it's /32
+<% @munin_masters.sort.each do |master| %>
+cidr_allow <%= master['ipaddress'] %>/32
+<% end %>
+cidr_allow 10.1.1.0/24
+
+# Which address to bind to;
+host <%= node['munin']['node']['bind_address'] %>
+
+# And which port
+port <%= node['munin']['node']['port'] %>

@@ -1,0 +1,19 @@
+<%= node['munin']['logdir'] %>/munin-cgi-graph.log {
+        daily
+        missingok
+        rotate 7
+        compress
+        notifempty
+        #create 640 www-data adm
+        # see http://munin-monitoring.org/ticket/1152
+        copytruncate
+}
+
+<%= node['munin']['logdir'] %>/*.log {
+	        daily
+	        missingok
+	        rotate 7
+	        compress
+	        notifempty
+	        create 640 munin adm
+}

@@ -1,0 +1,34 @@
+server {
+	listen			<%= node['ipaddress'] %>:80;
+	server_name <%= node['munin']['master']['server_name'] %>;
+
+	access_log off;
+	error_log /var/log/nginx/munin.error.log;
+
+	root <%= node['munin']['master']['htmldir'] %>;
+
+	auth_basic "Restricted Area";
+	auth_basic_user_file <%= node['munin']['master']['htmldir'] %>/.htpasswd;
+
+<% if node['munin']['master']['html_strategy'] == "cgi" %>
+  location / {
+			fastcgi_split_path_info ^(/)(.*);
+			fastcgi_param PATH_INFO $fastcgi_path_info;
+			fastcgi_pass unix:<%= node['munin']['rundir'] %>/fcgi-html.sock;
+			include fastcgi_params;
+  }
+<% end %>
+	
+	location /static/ {
+		  alias <%= node['munin']['master']['staticdir'] %>/;
+	}
+
+<% if node['munin']['master']['graph_strategy'] == "cgi" %>
+	location ^~ /munin/cgi/munin-cgi-graph/ {
+			fastcgi_split_path_info ^(/munin/cgi/munin-cgi-graph)(.*);
+			fastcgi_param PATH_INFO $fastcgi_path_info;
+			fastcgi_pass unix:<%= node['munin']['rundir'] %>/fcgi-graph.sock;
+			include fastcgi_params;
+  }
+<% end %>
+}
