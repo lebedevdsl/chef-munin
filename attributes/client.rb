@@ -1,7 +1,6 @@
 default['munin']['node']['bind_address']  = node['ipaddress']
 default['munin']['node']['port']          = "4949"
 default['munin']['node']['ignore_list']   = [".swp"]
-default['munin']['node']['pluginstatedir']= "/var/lib/munin-node"
 
 default['munin']['logdir'] = "/var/log/munin"
 default['munin']['conf_dir'] = "/etc/munin"

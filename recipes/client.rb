@@ -30,17 +30,12 @@ if munin_masters.empty?
   munin_masters << node
 end
 
-# Installing prerequisites
-package 'acl' 
-
 # Installing required package
 package "munin-node" do
   options "-t squeeze-backports"
   version "2.0.6-3~bpo60+1"
 end
 
-# Fix permissions to plugin-state directory
-execute "setfacl -Rm u:munin:rwx,d:munin:rwx #{node['munin']['node']['pluginstatedir']}"
 
 # Deploying node configuration
 template  "#{node['munin']['conf_dir']}/munin-node.conf" do

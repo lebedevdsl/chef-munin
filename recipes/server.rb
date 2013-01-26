@@ -34,9 +34,6 @@ if monitored_nodes.empty?
   monitored_nodes << node
 end
 
-# Installing prerequisites
-package 'acl'
-
 # Installing master package from squeeze-backports
 package "munin" do
   options "-t squeeze-backports"
