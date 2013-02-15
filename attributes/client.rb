@@ -6,4 +6,4 @@ default['munin']['logdir'] = "/var/log/munin"
 default['munin']['conf_dir'] = "/etc/munin"
 default['munin']['rundir'] =   "/var/run/munin"
 
-normal['munin']['node']['munin_master_chef_query'] = "run_list:recipe\\[munin\\:\\:server\\]"
+default['munin']['node']['munin_master_chef_query'] = "run_list:recipe\\[munin\\:\\:server\\]"
