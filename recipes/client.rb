@@ -36,6 +36,11 @@ package "munin-node" do
   version "2.0.6-3~bpo60+1"
 end
 
+# Starting node daemon
+service "munin-node" do
+  supports  :start => true, :stop => true, :restart => true
+  action    :start
+end
 
 # Deploying node configuration
 template  "#{node['munin']['conf_dir']}/munin-node.conf" do
@@ -43,11 +48,7 @@ template  "#{node['munin']['conf_dir']}/munin-node.conf" do
   owner   "root"
   group   "root"
   variables(:munin_masters => munin_masters)
+  notifies :restart, "service[munin-node]"
 end
 
-# Starting node daemon
-service "munin-node" do
-  supports  :start => true, :stop => true, :restart => true
-  action    :start
-end
 

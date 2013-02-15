@@ -49,15 +49,16 @@ package "spawn-fcgi" do
 end
 
 # Spawning rrdcached
+service "rrdcached" do
+  supports  :start => true, :stop => true
+  action    [:enable, :start]
+end
+
 template  "/etc/default/rrdcached" do
   source  "rrdcached-defaults.erb"
   owner   "root"
   group   "root"
-end
-
-service "rrdcached" do
-  supports  :start => true, :stop => true
-  action    [:enable, :start]
+  notifies :restart, "service[rrdcached]"
 end
 
 # Fixing permissions to rrdcached socket
@@ -122,7 +123,14 @@ template "/etc/nginx/sites-available/munin-master.conf" do
   only_if {node['nginx']}
 end
 
+# Nginx related stuff
 link "/etc/nginx/sites-enabled/munin-master.conf" do
   to "/etc/nginx/sites-available/munin-master.conf"
   only_if {node['nginx']}
 end
+
+execute "setfacl" do
+  command "setfacl -Rm u:munin:rwx,d:u:munin:rwx,u:www-data:rwx,d:u:www-data:rwx #{node['munin']['master']['htmldir']}"
+  only_if {node['nginx']}
+end
+
